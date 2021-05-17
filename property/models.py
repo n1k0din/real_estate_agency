@@ -4,10 +4,21 @@ from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-class Flat(models.Model):
-    owner = models.CharField('ФИО владельца', max_length=200)
-    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
+class Owner(models.Model):
+    owner = models.CharField('ФИО владельца', db_index=True, max_length=200)
+    owners_phonenumber = models.CharField('Номер владельца', db_index=True, max_length=20)
     owner_pure_phone = PhoneNumberField('Нормализованный номер владельца', blank=True)
+    flats = models.ManyToManyField(
+        'Flat',
+        related_name='flat_owners',
+        verbose_name='Квартиры в собственности',
+    )
+
+    def __str__(self):
+        return f'{self.owner}'
+
+
+class Flat(models.Model):
     new_building = models.NullBooleanField('Новостройка?')
     liked_by = models.ManyToManyField(
         User,
