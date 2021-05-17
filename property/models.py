@@ -9,7 +9,12 @@ class Flat(models.Model):
     owners_phonenumber = models.CharField('Номер владельца', max_length=20)
     owner_pure_phone = PhoneNumberField('Нормализованный номер владельца', blank=True)
     new_building = models.NullBooleanField('Новостройка?')
-    liked_by = models.ManyToManyField(User, related_name='liked_flats', verbose_name='Кто лайкнул')
+    liked_by = models.ManyToManyField(
+        User,
+        related_name='liked_flats',
+        verbose_name='Кто лайкнул',
+        blank=True,
+    )
 
     created_at = models.DateTimeField(
         'Когда создано объявление',
@@ -17,9 +22,7 @@ class Flat(models.Model):
         db_index=True)
 
     description = models.TextField('Текст объявления', blank=True)
-
     price = models.IntegerField('Цена квартиры', db_index=True)
-
     town = models.CharField(
         'Город, где находится квартира',
         max_length=50,
@@ -52,7 +55,6 @@ class Flat(models.Model):
 
     has_balcony = models.NullBooleanField('Наличие балкона', db_index=True)
     active = models.BooleanField('Активно-ли объявление', db_index=True)
-
     construction_year = models.IntegerField(
         'Год постройки здания',
         null=True,
